@@ -7,6 +7,8 @@ use Module::Load qw/load/;
 use Module::Load::Conditional qw/can_load/;
 use namespace::clean;
 
+our $VERSION = '0.01';
+
 =head1 NAME
 
 Log::Dispatch::DesktopNotification - Send log messages to a desktop notification system

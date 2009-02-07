@@ -20,4 +20,6 @@ else {
     }
 }
 
+extra_tests;
+
 WriteAll;

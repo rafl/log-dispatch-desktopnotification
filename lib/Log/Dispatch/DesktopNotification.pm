@@ -49,7 +49,7 @@ Otherwise Log::Dispatch::Null will be returned.
 
 sub output_class {
     if ($^O eq 'darwin') {
-        my $mod = 'Log::Dispatch::MacGrowl';
+        my $mod = 'Log::Dispatch::Growl';
         load $mod; return $mod;
     }
 

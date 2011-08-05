@@ -7,7 +7,7 @@ use Module::Load qw/load/;
 use Module::Load::Conditional qw/can_load/;
 use namespace::clean;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 =head1 NAME
 
@@ -41,16 +41,21 @@ sub new {
 Returns the name of a Log::Dispatch::Output class that's suitable to
 graphically notify a user on the current system.
 
-On MacOS X that'll be Log::Dispatch::MacGrowl. On other systems
-Log::Dispatch::Gtk2::Notify will be returned if it's available and usable.
-Otherwise Log::Dispatch::Null will be returned.
+On MacOS X that'll be Log::Dispatch::Growl or
+Log::Dispatch::MacGrowl. On other systems Log::Dispatch::Gtk2::Notify
+will be returned if it's available and usable.  Otherwise
+Log::Dispatch::Null will be returned.
 
 =cut
 
 sub output_class {
     if ($^O eq 'darwin') {
-        my $mod = 'Log::Dispatch::Growl';
-        load $mod; return $mod;
+        for (qw(Growl MacGrowl)) {
+            my $mod = "Log::Dispatch::$_";
+            if (can_load(modules => { $mod => undef })) {
+                return $mod;
+            }
+        }
     }
 
     if (can_load(modules => { Gtk2 => undef }) && Gtk2->init_check) {
@@ -69,8 +74,8 @@ available (most *N*Xes).
 
 =head1 SEE ALSO
 
-L<Log::Dispatch>, L<Log::Dispatch::Gtk2::Notify>, L<Log::Dispatch::MacGrowl>,
-L<Log::Dispatch::Null>
+L<Log::Dispatch>, L<Log::Dispatch::Gtk2::Notify>, L<Log::Dispatch::Growl>,
+L<Log::Dispatch::MacGrowl>, L<Log::Dispatch::Null>
 
 =head1 AUTHOR
 
